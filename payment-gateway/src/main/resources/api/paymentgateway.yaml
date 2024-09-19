@@ -1,0 +1,581 @@
+openapi: "3.0.3"
+info:
+  version: "1.0.0"
+  title: Payment Gateway
+  description: This api will provide endpoints for managing es
+  termsOfService: http://www.keelean.ng
+  contact:
+    name: Kingsley Amaeze
+    url: http://www.keelean.ng
+    email: amaezekingsley@ymail.com
+  license:
+    name: None
+    url: http://www.keelean.ng
+externalDocs:
+  description: For information not covered in this specification you can find more details in the link below
+  url: http://www.keelean.ng
+
+servers:
+  - url: https://localhost:8080/v1
+
+paths:
+  /api/v1/card:
+    post:
+      tags:
+        - Estate
+      summary: To create an estate
+      description: To create an estate an estate object has to be sent to this endpoint
+      operationId: createEstate
+      requestBody:
+        description: This object is used to capture estate details
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createEstateRequest'
+      responses:
+        "200":
+          description: "Estate successfully created"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createEstateResponse'
+        "404":
+          description: Error validating user NIN
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createEstateResponse'
+    get:
+      tags:
+        - Estate
+      summary: Get All Estate
+      description: This endpoint is used to retrieve all estates
+      operationId: getAll
+      responses:
+        "200":
+          description: Create Password object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListOfEstates'
+        "404":
+          description: Error validating user NIN
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListOfEstates'
+  /api/v1/estates/{estateId}:
+    put:
+      tags:
+        - Estate
+      summary: To update an estate
+      operationId: updateEstate
+      parameters:
+        - name: estateId
+          in: path
+          required: true
+          schema:
+            type: string
+            description: Estate Id parameter
+            example: 3b5b1707-b82c-4b1d-9078-157053902525
+      requestBody:
+        description: Estate update object
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/updateEstateRequest'
+      responses:
+        "200":
+          description: Create Password object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+        "404":
+          description: Error validating user NIN
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+    get:
+      tags:
+        - Estate
+      summary: Get Estate By ID
+      operationId: getById
+      parameters:
+        - name: estateId
+          in: path
+          required: true
+          schema:
+            type: string
+            description: Estate ID parameter
+            example:
+              3b5b1707-b82c-4b1d-9078-157053902525
+      responses:
+        "200":
+          description: Create Password object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListOfEstates'
+        "404":
+          description: Error validating user NIN
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListOfEstates'
+  /api/v1/estates/{estateId}/buildings/{buildingId}/flats/{flatId}:
+    get:
+      tags:
+        - Estate
+      summary: Get Tenant Address By estate, building and flat IDs
+      operationId: getTenantAddress
+      parameters:
+        - name: estateId
+          in: path
+          required: true
+          schema:
+            type: string
+            description: Estate ID parameter
+            example:
+              3b5b1707-b82c-4b1d-9078-157053902525
+        - name: buildingId
+          in: path
+          required: true
+          schema:
+            type: string
+            description: Building ID parameter
+            example:
+              3b5b1707-b82c-4b1d-9078-157053902525
+        - name: flatId
+          in: path
+          required: true
+          schema:
+            type: string
+            description: Flat ID parameter
+            example:
+              3b5b1707-b82c-4b1d-9078-157053902525
+      responses:
+        "200":
+          description: Tenant address object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TenantAddressResponse'
+        "404":
+          description: Error getting tenant address
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TenantAddressResponse'
+  /api/v1/estates/{estateId}/buildings:
+    description: This endpoint can be used to add Building to an estate
+    post:
+      tags:
+        - EstateBuilding
+      summary: Add Building To An Estate
+      description: |
+        Add a building to an estate using the Building object as described in Building object section
+      operationId: addBuildingToEstate
+      parameters:
+        - name: estateId
+          in: path
+          required: true
+          schema:
+            type: string
+            description: Estate Id parameter
+            example: 3b5b1707-b82c-4b1d-9078-157053902525
+      requestBody:
+        description: Building object
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/addBuildingRequest'
+      responses:
+        "201":
+          description: User added successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/addBuildingResponse'
+        "404":
+          description: Error adding user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/addBuildingResponse'
+    get:
+      tags:
+        - EstateBuilding
+      summary: Get All Building In an Estate
+      description: This endpoint is used to retrieve all buildings in a particular estate
+      operationId: getBuildingsFromEstate
+      parameters:
+        - name: estateId
+          in: path
+          required: true
+          schema:
+            description: Estate ID parameter
+            type: string
+            example: 3b5b1707-b82c-4b1d-9078-157053902525
+      responses:
+        "201":
+          description: User added successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListOfBuildings'
+        "404":
+          description: Error adding user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListOfBuildings'
+  /api/v1/buildings/{buildingId}/flats:
+    post:
+      tags:
+        - BuildingFlat
+      summary: Add Flat To A Building
+      description: This endpoint is used to add a flat to a particular building
+      operationId: addFlatToBuilding
+      parameters:
+        - name: buildingId
+          in: path
+          required: true
+          description: Building ID parameter
+          schema:
+            type: string
+            description: Building ID
+            example: 3b5b1707-b82c-4b1d-9078-157053902525
+      requestBody:
+        description: Building object
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/addFlatRequest'
+      responses:
+        "201":
+          description: User added successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/addFlatResponse'
+        "404":
+          description: Error adding user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/addBuildingResponse'
+    get:
+      tags:
+        - BuildingFlat
+      summary: Get Flat In A Building
+      description: This endpoint is used to retrive all flats in a particular building
+      operationId: getFlatsFromBuilding
+      parameters:
+        - name: buildingId
+          in: path
+          required: true
+          description: Building ID parameter
+          schema:
+            type: string
+            description: Building ID
+            example: 3b5b1707-b82c-4b1d-9078-157053902525
+      responses:
+        "201":
+          description: User added successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListOfFlats'
+        "404":
+          description: Error adding user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListOfFlats'
+
+components:
+  schemas:
+    addBuildingRequest:
+      type: object
+      description: This object is use to capture information for creating an admin user
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          description: The building label
+          example:
+            "Block5"
+        codeName:
+          type: string
+          description: This building code name
+          example:
+            "Block5"
+        description:
+          type: string
+          description: A unique description of this building
+          example:
+            "Babajide House"
+        street:
+          type: string
+          description: The street where the building is situated in the estate
+          example:
+            "5 pepper road"
+    createEstateRequest:
+      type: object
+      required:
+        - name
+      description: This object is use to capture user NIN
+      properties:
+        name:
+          type: string
+          description: The name of the estate
+          example:
+            "First City Gate"
+        description:
+          type: string
+          description: The estate description
+          example:
+            "Sweet dreams of estate"
+        country:
+          type: string
+          description: Estate country
+          example:
+            "Nigeria"
+        state:
+          type: string
+          description: The estate state
+          example:
+            "Lagos"
+        city:
+          type: string
+          description: The estate city
+          example:
+            "Lagos"
+        lga:
+          type: string
+          description: The estate local govt area
+          example:
+            "Alimosho"
+        street:
+          type: string
+          description: The street of the estate is capture
+          example:
+            "49 Baale"
+
+    addBuildingResponse:
+      type: object
+      description: This object is used to capture information that is generated after a building is added to an estate
+      properties:
+        id:
+          type: string
+          description: The new ID of the just created building
+          example:
+            "abcde-efghi-jkolpooi-5trsswaa"
+        estateId:
+          type: string
+          description: The estate ID of the estate the building is added to
+          example:
+            "abcde-efghi-jkolpooi-5trsswaa"
+        name:
+          type: string
+          description: The name of the just created building
+          example:
+            "Block5"
+        errorResponse:
+          $ref: '#/components/schemas/errorResponse'
+
+    createEstateResponse:
+      type: object
+      description: Captures information returned after estate is created
+      properties:
+        id:
+          description: The ID of the created estate
+          type: string
+          example:
+            "adsffggii-ooiytree-kkjhgfs-ploou"
+        name:
+          description: The name of the created estate
+          type: string
+          example:
+            "First City Gate"
+        errorResponse:
+          $ref: '#/components/schemas/errorResponse'
+
+    errorResponse:
+      type: object
+      description: This object is used to capture error response
+      properties:
+        success:
+          type: boolean
+          description: Indicates whether call was successful or not
+          example:
+            true
+        message:
+          type: string
+          description: The description of the response
+          example:
+            User added successfully
+        code:
+          type: string
+          description: The response code
+          example:
+            404
+
+    addFlatRequest:
+      type: object
+      required:
+        - label
+      description: Captures response details of partner add flat request
+      properties:
+        label:
+          type: string
+          description: Flat label
+          example:
+            00
+
+
+    addFlatResponse:
+      type: object
+      description: Holds add to flat building response
+      properties:
+        buildingId:
+          type: string
+          description: The building ID the flat is added to
+          example:
+            true
+        id:
+          type: string
+          description: New added flat ID
+          example:
+            "adsffggii-ooiytree-kkjhgfs-ploou"
+        errorResponse:
+          $ref: '#/components/schemas/errorResponse'
+
+    updateEstateRequest:
+      type: object
+      description: Create password object
+      required:
+        - password
+        - username
+        - confirmPassword
+      properties:
+        password:
+          type: string
+          description: The user password
+          minimum: 8
+          maximum: 20
+        confirmPassword:
+          type: string
+          description: The user password confirmed
+          minimum: 8
+          maximum: 20
+        username:
+          type: string
+          description: The user or admin username
+        errorResponse:
+          $ref: '#/components/schemas/errorResponse'
+
+    ListOfEstates:
+      type: object
+      description: Holds list of estates object
+      properties:
+        estates:
+          type: array
+          items:
+            $ref: '#/components/schemas/EstateItem'
+        errorResponse:
+          $ref: '#/components/schemas/errorResponse'
+    EstateItem:
+      type: object
+      description: Holds list of estates object
+      properties:
+        id:
+          type: string
+          description: ID of estate
+          example: "adsffggii-ooiytree-kkjhgfs-ploou"
+        name:
+          type: string
+          description: The estate name
+          example: First City Gate
+        description:
+          type: string
+          description: The estates description
+
+
+    ListOfBuildings:
+      type: object
+      description: Holds list of estates object
+      properties:
+        buildings:
+          type: array
+          items:
+            $ref: '#/components/schemas/BuildingItem'
+        errorResponse:
+          $ref: '#/components/schemas/errorResponse'
+    BuildingItem:
+      type: object
+      description: Holds list of building objects
+      properties:
+        id:
+          type: string
+          description: ID of building
+          example: "adsffggii-ooiytree-kkjhgfs-ploou"
+        name:
+          type: string
+          description: The building name
+          example: First City Gate
+        description:
+          type: string
+          description: The building description
+
+    ListOfFlats:
+      type: object
+      description: Holds list of estates object
+      properties:
+        flats:
+          type: array
+          items:
+            $ref: '#/components/schemas/FlatItem'
+        errorResponse:
+          $ref: '#/components/schemas/errorResponse'
+    FlatItem:
+      type: object
+      description: Holds list of flat objects
+      properties:
+        id:
+          type: string
+          description: ID of flat
+          example: "adsffggii-ooiytree-kkjhgfs-ploou"
+        name:
+          type: string
+          description: The flat name
+          example: BlockB4
+
+    TenantAddressResponse:
+      type: object
+      description: Holds list of estates object
+      properties:
+        flat:
+          $ref: '#/components/schemas/FlatItem'
+        building:
+          $ref: '#/components/schemas/BuildingItem'
+        estate:
+          $ref: '#/components/schemas/EstateItem'
+        errorResponse:
+          $ref: '#/components/schemas/errorResponse'
+
+
+
+
+
+
+
+
+
