@@ -13,6 +13,6 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties
 public class PaymentProcessorProperties {
 
-    private String externalEstateEndpointUrl;
-    private String externalOnboardingEndpointUrl;
+    private String externalAcquiringBankGatewayEndpointUrl;
+    private String externalBankTransferGatewayEndpointUrl;
 }

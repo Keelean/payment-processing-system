@@ -42,17 +42,17 @@ public class AppConfig {
         return rs;
     }
 
-    @Bean("estateServiceWebClient")
-    WebClient estateWebClient(WebClient.Builder webClientBuilder) {
+    @Bean("acquiringBankGatewayWebClient")
+    WebClient acquiringBankGatewayWebClient(WebClient.Builder webClientBuilder) {
         return webClientBuilder
-                .baseUrl(apiGatewayProperties.getExternalEstateEndpointUrl())
+                .baseUrl(apiGatewayProperties.getExternalAcquiringBankGatewayEndpointUrl())
                 .build();
     }
 
-    @Bean("authServiceWebClient")
-    WebClient authServiceWebClient(WebClient.Builder webClientBuilder) {
+    @Bean("bankTransferGatewayWebClient")
+    WebClient bankTransferGatewayWebClient(WebClient.Builder webClientBuilder) {
         return webClientBuilder
-                .baseUrl(apiGatewayProperties.getExternalOnboardingEndpointUrl())
+                .baseUrl(apiGatewayProperties.getExternalBankTransferGatewayEndpointUrl())
                 .build();
     }
 

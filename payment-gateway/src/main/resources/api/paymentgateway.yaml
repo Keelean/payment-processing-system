@@ -88,7 +88,6 @@ components:
           example:
             false
 
-
     PGPayerDetails:
       type: object
       description: This object is used to capture error response
@@ -121,6 +120,9 @@ components:
       description: Captures bulk upload of users
       properties:
         accountNumber:
+          type: string
+          description: The payer account number
+        bankCode:
           type: string
           description: The payer account number
 

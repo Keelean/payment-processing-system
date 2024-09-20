@@ -43,19 +43,10 @@ feign:
     enabled: true
 
 external:
-  nin:
-    endpoint:
-      url: https://api-devapps.vfdbank.systems/vtech-wallet/api/v1.1/kyc
-  sms:
-    endpoint:
-      url: https://sms-service/vtech-wallet/api/v1.1/kyc
-  estate:
+  acquiring-bank-gateway:
     endpoint:
       url: http://estatemgtservice:8080
-  onboarding:
-    endpoint:
-      url: http://authserver:8080
-  users:
+  bank-transfer-gateway:
     endpoint:
       url: http://authserver:8080
 logging:
