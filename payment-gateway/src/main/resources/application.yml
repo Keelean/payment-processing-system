@@ -30,7 +30,7 @@ spring:
     allow-bean-definition-overriding: true
 
 server:
-  port: 8080
+  port: 9090
   shutdown: graceful
   netty:
     connection-timeout: 2s
@@ -43,7 +43,7 @@ server:
 external:
   payment-processor:
     endpoint:
-      url: http://payment-processor:8080
+      url: http://localhost:8081
 logging:
   level:
     root: INFO

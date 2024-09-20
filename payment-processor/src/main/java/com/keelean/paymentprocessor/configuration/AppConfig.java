@@ -42,14 +42,14 @@ public class AppConfig {
         return rs;
     }
 
-    @Bean("acquiringBankGatewayWebClient")
+    @Bean("acquiringBankGatewayClient")
     WebClient acquiringBankGatewayWebClient(WebClient.Builder webClientBuilder) {
         return webClientBuilder
                 .baseUrl(apiGatewayProperties.getExternalAcquiringBankGatewayEndpointUrl())
                 .build();
     }
 
-    @Bean("bankTransferGatewayWebClient")
+    @Bean("bankTransferGatewayClient")
     WebClient bankTransferGatewayWebClient(WebClient.Builder webClientBuilder) {
         return webClientBuilder
                 .baseUrl(apiGatewayProperties.getExternalBankTransferGatewayEndpointUrl())

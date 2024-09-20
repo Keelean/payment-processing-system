@@ -1,17 +1,19 @@
 package com.keelean.paymentprocessor.external;
 
-import com.keelean.paymentprocessor.api.model.PPPaymentRequest;
+import com.keelean.paymentprocessor.api.model.PPCardDetails;
 import com.keelean.paymentprocessor.api.model.PPPaymentResponse;
+import com.keelean.paymentprocessor.util.AppUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
+
+import static com.keelean.paymentprocessor.util.AppUtil.defaultError;
+import static com.keelean.paymentprocessor.util.AppUtil.defaultTimeoutError;
 
 @Component
 @Slf4j
@@ -21,25 +23,23 @@ public class AcquiringBankGatewayWebClient {
 
     private final WebClient webClient;
 
-    public AcquiringBankGatewayWebClient(@Qualifier("acquiringBankGatewayWebClient") WebClient webClient) {
+    public AcquiringBankGatewayWebClient(@Qualifier("acquiringBankGatewayClient") WebClient webClient) {
         this.webClient = webClient;
     }
 
-    public Mono<PPPaymentResponse> processPayment(Mono<PPPaymentRequest> paymentRequestMono){
+    public Mono<PPPaymentResponse> processPayment(Mono<PPCardDetails> cardDetailsMono){
         return webClient.post()
                 .uri(PAYMENT_API)
-                .headers(this::headers)
-                .body(paymentRequestMono, PPPaymentRequest.class)
+                .headers(AppUtil::headers)
+                .body(cardDetailsMono, PPCardDetails.class)
                 .retrieve()
                 .bodyToMono(PPPaymentResponse.class)
-                .timeout(Duration.ofSeconds(1), Mono.empty())
-                .onErrorResume(WebClientResponseException.ServiceUnavailable.class, exception -> Mono.empty())
+                .log()
+                .timeout(Duration.ofSeconds(1), defaultTimeoutError())
+                .onErrorResume(WebClientResponseException.ServiceUnavailable.class, exception -> defaultTimeoutError())
                 //.retryWhen(Retry.backoff(3, Duration.ofSeconds(100)))
-                .onErrorResume(Exception.class, exception -> Mono.empty());
+                .onErrorResume(Exception.class, exception -> defaultError());
     }
 
-    private void headers(HttpHeaders httpHeaders) {
-        httpHeaders.add("Content-Type", "application/json");
-    }
 
 }

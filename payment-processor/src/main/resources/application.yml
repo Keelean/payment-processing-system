@@ -4,24 +4,22 @@ spring:
   profiles:
     active:
       - qa
-  rsocket:
-    server:
-      port: 7000
-  #datasource:
-    #url: jdbc:postgresql://localhost:5432/estate-mgt-service
-    #username: postgres
-    #password: admin
-    #driver-class-name: org.postgresql.Driver
-  #jpa:
-    #open-in-view: false
-    #show-sql: true
-    #properties:
-      #hibernate:
-        #format_sql: true
-        #generate_statistics: true
-        #naming:
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/payment-processor
+    username: postgres
+    password: admin
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    open-in-view: false
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        generate_statistics: true
+          #naming:
           #physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-          #implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpll
+        #implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpll
   flyway:
     enabled: true
     baseline-on-migrate: true
@@ -30,25 +28,22 @@ spring:
     allow-bean-definition-overriding: true
 
 server:
-  port: 8080
+  port: 8081
   shutdown: graceful
-  undertow:
+  netty:
     connection-timeout: 2s
     keep-alive-timeout: 15s
     threads:
       max: 200
       min-spare: 10
-feign:
-  okhttp:
-    enabled: true
 
 external:
   acquiring-bank-gateway:
     endpoint:
-      url: http://estatemgtservice:8080
+      url: http://localhost:8083
   bank-transfer-gateway:
     endpoint:
-      url: http://authserver:8080
+      url: http://localhost:8082
 logging:
   level:
     root: INFO

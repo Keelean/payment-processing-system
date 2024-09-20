@@ -1,4 +1,4 @@
-@estate-management
+@make-payment
 Feature: Make Payment
   As a customer
   I want to be able to make payment to a merchant

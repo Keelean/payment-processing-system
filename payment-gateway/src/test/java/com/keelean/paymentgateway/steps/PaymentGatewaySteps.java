@@ -45,8 +45,10 @@ public class PaymentGatewaySteps extends CucumberSpringConfiguration {
         var mockResponse = new MockResponse()
                 .addHeader("Content-Type", "application/json")
                 .setBody("""
-                        "message":"Payment completed successfully",
-                        "success":true
+                        {
+                            "message":"Payment completed successfully",
+                            "success":true
+                        }
                         """);
         mockWebServer.enqueue(mockResponse);
         paymentRequest = new PGPaymentRequest();
@@ -76,8 +78,12 @@ public class PaymentGatewaySteps extends CucumberSpringConfiguration {
 
     @Then("The payment is successful")
     public void thePaymentIsSuccessful() {
-        StepVerifier.create(responseEntityMono.map(HttpEntity::getBody))
-                .expectNextMatches(PGPaymentResponse::getSuccess);
+
+        Mono<PGPaymentResponse> ppPaymentResponseMono = responseEntityMono.map(HttpEntity::getBody);
+        StepVerifier.create(ppPaymentResponseMono)
+                .expectNextMatches(e-> e.getMessage().equals("Payment completed successfully"))
+                .verifyComplete();
+
     }
 
     @After
