@@ -2,9 +2,9 @@
   "library": "spring-boot",
   "dateLibrary": "java8",
   "hideGenerationTimestamp": true,
-  "modelPackage": "ng.propertly.estatemgtservice.api.model",
-  "apiPackage": "ng.propertly.estatemgtservice.api",
-  "invokerPackage": "ng.propertly.estatemgtservice.api",
+  "modelPackage": "com.keelean.paymentgateway.api.model",
+  "apiPackage": "com.keelean.paymentgateway.api",
+  "invokerPackage": "com.keelean.paymentgateway.api",
   "serializableModel": true,
   "openApiNullable": false,
   "useTags": true,
@@ -13,6 +13,7 @@
   "unhandledException": true,
   "useSpringBoot3": true,
   "useSwaggerUI": true,
+  "reactive": true,
   "importMappings": {
     "ResourceSupport": "org.springframework.hateoas.RepresentationModel",
     "Link": "org.springframework.hateoas.Link"

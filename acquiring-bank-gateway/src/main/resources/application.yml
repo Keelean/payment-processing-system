@@ -1,0 +1,64 @@
+spring:
+  application:
+    name: acquiringbankgateway
+  profiles:
+    active:
+      - qa
+  rsocket:
+    server:
+      port: 7000
+  #datasource:
+    #url: jdbc:postgresql://localhost:5432/estate-mgt-service
+    #username: postgres
+    #password: admin
+    #driver-class-name: org.postgresql.Driver
+  #jpa:
+    #open-in-view: false
+    #show-sql: true
+    #properties:
+      #hibernate:
+        #format_sql: true
+        #generate_statistics: true
+        #naming:
+          #physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+          #implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpll
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    locations: 'classpath:db/migration'
+  main:
+    allow-bean-definition-overriding: true
+
+server:
+  port: 8080
+  shutdown: graceful
+  undertow:
+    connection-timeout: 2s
+    keep-alive-timeout: 15s
+    threads:
+      max: 200
+      min-spare: 10
+feign:
+  okhttp:
+    enabled: true
+
+external:
+  nin:
+    endpoint:
+      url: https://api-devapps.vfdbank.systems/vtech-wallet/api/v1.1/kyc
+  sms:
+    endpoint:
+      url: https://sms-service/vtech-wallet/api/v1.1/kyc
+  estate:
+    endpoint:
+      url: http://estatemgtservice:8080
+  onboarding:
+    endpoint:
+      url: http://authserver:8080
+  users:
+    endpoint:
+      url: http://authserver:8080
+logging:
+  level:
+    root: INFO
+

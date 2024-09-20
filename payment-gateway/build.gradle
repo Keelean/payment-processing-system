@@ -24,24 +24,60 @@ repositories {
 	mavenCentral()
 }
 
+processResources {
+	dependsOn(generateSwaggerCode)
+}
+
 ext {
-	set('springCloudVersion', "2023.0.3")
+	set('springCloudVersion', "2023.0.2")
 	set('cucumberVersion', "7.18.0")
+	set('springcloudazure', "1.2.25")
 	set('testcontainersVersion', "1.19.8")
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-webflux'
-	implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-reactor-resilience4j'
+
+	//If we want hateoas. we also set heteoas to true in config.json
+	implementation 'org.springframework.boot:spring-boot-starter-hateoas'
+
+	//open api code generation
 	swaggerCodegen 'org.openapitools:openapi-generator-cli:7.3.0'
 	implementation 'io.swagger.core.v3:swagger-annotations:2.2.20'
 
+	implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.3.0'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
+	//implementation 'io.github.resilience4j:resilience4j-reactor:'
+
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	//implementation ('org.springframework.boot:spring-boot-starter-web')
+	//implementation 'org.springframework.boot:spring-boot-starter-undertow'
+
+	//implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+	//implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	//implementation 'org.flywaydb:flyway-core'
+	//implementation 'org.flywaydb:flyway-database-postgresql'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	//implementation 'io.hypersistence:hypersistence-utils-hibernate-63:3.8.2'
+    //implementation 'io.github.openfeign:feign-okhttp'
+	implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	implementation 'org.springframework.boot:spring-boot-starter-hateoas'
+	implementation 'org.springframework.boot:spring-boot-starter-rsocket'
+
+    //implementation 'com.fasterxml.jackson.module:jackson-module-jakarta-xmlbind-annotations:2.17.1'
+	//implementation 'com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.17.1'
+
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 	annotationProcessor 'org.projectlombok:lombok'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'io.projectreactor:reactor-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	//testRuntimeOnly 'com.h2database:h2'
+	//runtimeOnly 'org.postgresql:postgresql'
+
 	testImplementation 'org.junit.platform:junit-platform-suite'
 	testImplementation 'org.junit.platform:junit-platform-engine'
 
@@ -53,15 +89,22 @@ dependencies {
 	testImplementation 'org.hamcrest:hamcrest-library:2.2'
 	testImplementation 'org.springframework.boot:spring-boot-testcontainers'
 	testImplementation 'org.testcontainers:junit-jupiter'
+	testImplementation 'org.testcontainers:postgresql'
+	//testImplementation 'io.rest-assured:rest-assured'
 	testImplementation 'org.springframework.boot:spring-boot-devtools'
 	testImplementation 'com.squareup.okhttp3:mockwebserver'
 	testImplementation 'io.projectreactor:reactor-test'
 }
 
+//configurations.implementation {
+//	exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
+//}
+
+
 swaggerSources {
 	def typeMappings = 'URI=URI'
 	def importMappings = 'URI=java.net.URI'
-	apigateway {
+	paymentgateway {
 		def apiYaml = "${rootDir}/src/main/resources/api/paymentgateway.yaml"
 		def configJson = "${rootDir}/src/main/resources/api/config.json"
 		inputFile = file(apiYaml)
@@ -77,15 +120,14 @@ swaggerSources {
 	}
 }
 
-compileJava.dependsOn swaggerSources.apigateway.code
-sourceSets.main.java.srcDir "${swaggerSources.apigateway.code.outputDir}/src/main/java"
-sourceSets.main.resources.srcDir "${swaggerSources.apigateway.code.outputDir}/src/main/resources"
+compileJava.dependsOn swaggerSources.paymentgateway.code
+sourceSets.main.java.srcDir "${swaggerSources.paymentgateway.code.outputDir}/src/main/java"
+sourceSets.main.resources.srcDir "${swaggerSources.paymentgateway.code.outputDir}/src/main/resources"
 
 dependencyManagement {
 	imports {
 		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
 		mavenBom "io.cucumber:cucumber-bom:${cucumberVersion}"
-		mavenBom "com.azure:azure-sdk-bom:${springcloudazure}"
 		mavenBom "org.testcontainers:testcontainers-bom:${testcontainersVersion}"
 	}
 }
