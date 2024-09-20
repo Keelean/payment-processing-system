@@ -30,7 +30,7 @@ spring:
     allow-bean-definition-overriding: true
 
 server:
-  port: 8080
+  port: 8082
   shutdown: graceful
   undertow:
     connection-timeout: 2s
