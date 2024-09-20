@@ -144,8 +144,13 @@ components:
           example:
             09/24
         cvv:
-          type: string
+          type: integer
           description: The card value verification
+          example:
+            094
+        pin:
+          type: integer
+          description: The cardholder 4 digit pin
           example:
             094
 

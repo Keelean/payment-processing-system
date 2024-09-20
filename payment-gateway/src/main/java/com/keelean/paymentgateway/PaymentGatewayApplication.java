@@ -9,7 +9,6 @@ public class PaymentGatewayApplication {
 
 	public static void main(String[] args) {
 
-		//SpringApplication.run(ApiGatewayApplication.class, args);
 		SpringApplication app = new SpringApplication(PaymentGatewayApplication.class);
 		app.setWebApplicationType(WebApplicationType.REACTIVE);
 		app.run(args);

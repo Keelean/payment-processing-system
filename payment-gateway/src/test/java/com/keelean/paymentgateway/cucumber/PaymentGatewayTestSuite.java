@@ -8,9 +8,11 @@ import org.junit.platform.suite.api.Suite;
 
 import static io.cucumber.core.options.Constants.FILTER_TAGS_PROPERTY_NAME;
 
-/*@Suite
+@Suite
 @IncludeEngines("cucumber")
 @SelectClasspathResource("features")
-@ConfigurationParameter(key = FILTER_TAGS_PROPERTY_NAME, value = "not @user-image-upload")*/
+/*@ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "ng.propertly.estatemgtservice.steps")
+@ConfigurationParameter(key = PLUGIN_PUBLISH_QUIET_PROPERTY_NAME, value = "true")*/
+@ConfigurationParameter(key = FILTER_TAGS_PROPERTY_NAME, value = "not @user-image-upload")
 public class PaymentGatewayTestSuite {
 }

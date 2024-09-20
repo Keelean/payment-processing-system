@@ -42,55 +42,10 @@ public class AppConfig {
         return rs;
     }
 
-    @Bean("estateServiceWebClient")
-    WebClient estateWebClient(WebClient.Builder webClientBuilder) {
+    @Bean
+    WebClient webClient(WebClient.Builder webClientBuilder) {
         return webClientBuilder
-                .baseUrl(apiGatewayProperties.getExternalEstateEndpointUrl())
+                .baseUrl(apiGatewayProperties.getExternalPaymentProcessorEndpointUrl())
                 .build();
     }
-
-    @Bean("authServiceWebClient")
-    WebClient authServiceWebClient(WebClient.Builder webClientBuilder) {
-        return webClientBuilder
-                .baseUrl(apiGatewayProperties.getExternalOnboardingEndpointUrl())
-                .build();
-    }
-
-    @Bean
-    ServerCodecConfigurer serverCodecConfigurer() {
-        return ServerCodecConfigurer.create();
-    }
-
-    @Bean
-    CircuitBreakerConfig circuitBreakerConfig() {
-        return CircuitBreakerConfig.custom()
-                .failureRateThreshold(50)
-                .slowCallRateThreshold(50)
-                .waitDurationInOpenState(Duration.ofMillis(1000))
-                .slowCallDurationThreshold(Duration.ofSeconds(2))
-                .permittedNumberOfCallsInHalfOpenState(3)
-                .minimumNumberOfCalls(10)
-                .slidingWindowType(TIME_BASED)
-                .slidingWindowSize(5)
-                //.recordException(e -> INTERNAL_SERVER_ERROR.equals(getResponse().getStatus()))
-                .recordExceptions(IOException.class, TimeoutException.class)
-                //.ignoreException(Exception.class)
-                .build();
-    }
-
-    @Bean
-    CircuitBreakerRegistry circuitBreakerRegistry(){
-        return CircuitBreakerRegistry.of(circuitBreakerConfig());
-    }
-
-    @Bean
-    CircuitBreaker circuitBreakerAuthServerBackend(){
-        return circuitBreakerRegistry().circuitBreaker("autherServerBackend");
-    }
-
-    @Bean
-    CircuitBreaker circuitBreakerEstateServiceBackend(){
-        return circuitBreakerRegistry().circuitBreaker("estateServiceBackend", circuitBreakerConfig());
-    }
-
 }

@@ -13,6 +13,5 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties
 public class PaymentGatewayProperties {
 
-    private String externalEstateEndpointUrl;
-    private String externalOnboardingEndpointUrl;
+    private String externalPaymentProcessorEndpointUrl;
 }
