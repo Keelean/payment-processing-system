@@ -19,1110 +19,135 @@ servers:
   - url: http://localhost:8080
 
 paths:
-  /gateway/api/v1/payment:
+  /gateway/api/v1/payments:
     post:
       tags:
         - Payment
-      summary: To create an estate
-      description: To create an estate an estate object has to be sent to this endpoint
-      operationId: createEstate
+      summary: For making payments
+      description: This endpoint is for making payments
+      operationId: makePayment
       requestBody:
-        description: This object is used to capture estate details
+        description: This object is used to capture payment details
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AGCreateEstateRequest'
+              $ref: '#/components/schemas/PGPaymentRequest'
       responses:
         "200":
-          description: "Estate successfully created"
+          description: "Payment completed successfully"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AGCreateEstateResponse'
+                $ref: '#/components/schemas/PGPaymentResponse'
         "404":
-          description: Error creating estate
+          description: Error making payment
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AGCreateEstateResponse'
-    get:
-      tags:
-        - Estate
-      summary: Get All Estate
-      description: This endpoint is used to retrieve all estates
-      operationId: getAll
-      responses:
-        "200":
-          description: Create Password object
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AGListOfEstates'
-        "404":
-          description: Error getting estates
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AGListOfEstates'
-  /gateway/api/v1/estates/{estateId}:
-    put:
-      tags:
-        - Estate
-      summary: To update an estate
-      operationId: updateEstate
-      parameters:
-        - name: estateId
-          in: path
-          required: true
-          schema:
-            type: string
-            description: Estate Id parameter
-            example: 3b5b1707-b82c-4b1d-9078-157053902525
-      requestBody:
-        description: Estate update object
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/AGUpdateEstateRequest'
-      responses:
-        "200":
-          description: Update Estate response object
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AGErrorResponse'
-        "404":
-          description: Error updating estate
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AGErrorResponse'
-    get:
-      tags:
-        - Estate
-      summary: Get Estate By ID
-      operationId: getById
-      parameters:
-        - name: estateId
-          in: path
-          required: true
-          schema:
-            type: string
-            description: Estate ID parameter
-            example:
-              3b5b1707-b82c-4b1d-9078-157053902525
-      responses:
-        "200":
-          description: Get List Of estates object
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AGListOfEstates'
-        "404":
-          description: Error getting estates
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AGListOfEstates'
-  /gateway/api/v1/estates/{estateId}/buildings/{buildingId}/flats/{flatId}:
-    get:
-      tags:
-        - Estate
-      summary: Get Tenant Address By estate, building and flat IDs
-      operationId: getTenantAddress
-      parameters:
-        - name: estateId
-          in: path
-          required: true
-          schema:
-            type: string
-            description: Estate ID parameter
-            example:
-              3b5b1707-b82c-4b1d-9078-157053902525
-        - name: buildingId
-          in: path
-          required: true
-          schema:
-            type: string
-            description: Building ID parameter
-            example:
-              3b5b1707-b82c-4b1d-9078-157053902525
-        - name: flatId
-          in: path
-          required: true
-          schema:
-            type: string
-            description: Flat ID parameter
-            example:
-              3b5b1707-b82c-4b1d-9078-157053902525
-      responses:
-        "200":
-          description: Tenant address object
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AGTenantAddressResponse'
-        "404":
-          description: Error getting tenant address
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AGTenantAddressResponse'
-  /gateway/api/v1/estates/{estateId}/buildings:
-    description: This endpoint can be used to add Building to an estate
-    post:
-      tags:
-        - EstateBuilding
-      summary: Add Building To An Estate
-      description: |
-        Add a building to an estate using the Building object as described in Building object section
-      operationId: addBuildingToEstate
-      parameters:
-        - name: estateId
-          in: path
-          required: true
-          schema:
-            type: string
-            description: Estate Id parameter
-            example: 3b5b1707-b82c-4b1d-9078-157053902525
-      requestBody:
-        description: Building object
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/AGAddBuildingRequest'
-      responses:
-        "201":
-          description: User added successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AGAddBuildingResponse'
-        "404":
-          description: Error adding user
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AGAddBuildingResponse'
-    get:
-      tags:
-        - EstateBuilding
-      summary: Get All Building In an Estate
-      description: This endpoint is used to retrieve all buildings in a particular estate
-      operationId: getBuildingsFromEstate
-      parameters:
-        - name: estateId
-          in: path
-          required: true
-          schema:
-            description: Estate ID parameter
-            type: string
-            example: 3b5b1707-b82c-4b1d-9078-157053902525
-      responses:
-        "201":
-          description: Get all building in an estate object
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AGListOfBuildings'
-        "404":
-          description: Error getting buildings in an estate objects
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AGListOfBuildings'
-  /gateway/api/v1/buildings/{buildingId}/flats:
-    post:
-      tags:
-        - BuildingFlat
-      summary: Add Flat To A Building
-      description: This endpoint is used to add a flat to a particular building
-      operationId: addFlatToBuilding
-      parameters:
-        - name: buildingId
-          in: path
-          required: true
-          description: Building ID parameter
-          schema:
-            type: string
-            description: Building ID
-            example: 3b5b1707-b82c-4b1d-9078-157053902525
-      requestBody:
-        description: Building object
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/AGAddFlatRequest'
-      responses:
-        "201":
-          description: Flat added successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AGAddFlatResponse'
-        "404":
-          description: Error adding flat
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AGAddBuildingResponse'
-    get:
-      tags:
-        - BuildingFlat
-      summary: Get Flat In A Building
-      description: This endpoint is used to retrieve all flats in a particular building
-      operationId: getFlatsFromBuilding
-      parameters:
-        - name: buildingId
-          in: path
-          required: true
-          description: Building ID parameter
-          schema:
-            type: string
-            description: Building ID
-            example: 3b5b1707-b82c-4b1d-9078-157053902525
-      responses:
-        "200":
-          description: Successfully retrieved flats
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AGListOfFlats'
-        "404":
-          description: Error getting flats in a building
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AGListOfFlats'
-  /gateway/api/v1/onboarding:
-    post:
-      tags:
-        - Onboarding
-      summary: To validate a user NIN
-      description: To validate a user NIN requires passing the NIN as a path variable
-      operationId: validateUserUsingNIN
-      requestBody:
-        description: This object is used for capture user NIN
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/AGNinRequest'
-      responses:
-        "200":
-          description: "User NIN successfully validated"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AGNinResponse'
-        "404":
-          description: Error validating user NIN
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AGNinResponse'
-  /gateway/api/v1/onboarding/{userId}:
-    put:
-      tags:
-        - Onboarding
-      summary: To create user password
-      operationId: createPassword
-      parameters:
-        - name: userId
-          in: path
-          required: true
-          schema:
-            type: string
-            description: User Id parameter
-            example: 3b5b1707-b82c-4b1d-9078-157053902525
-      requestBody:
-        description: User password creation object
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/AGAddPasswordRequest'
-      responses:
-        "200":
-          description: Create Password object
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AGErrorResponse'
-        "404":
-          description: Error validating user NIN
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AGErrorResponse'
-    get:
-      tags:
-        - Onboarding
-      summary: Get user by encoded ID
-      operationId: getUserByEncodedId
-      parameters:
-        - name: userId
-          in: path
-          required: true
-          schema:
-            type: string
-            description: User Id parameter
-            example: Vittaaaaaaaaaaa
-      responses:
-        "200":
-          description: Get User object
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AGUserResponse'
-        "404":
-          description: Error getting user with ID
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AGUserResponse'
-  /gateway/api/v1/onboarding/{userId}/sms/{smsCode}:
-    get:
-      tags:
-        - Onboarding
-      summary: validate sms code to validate NIN
-      operationId: validateCode
-      parameters:
-        - name: userId
-          in: path
-          required: true
-          schema:
-            type: string
-            description: User Id parameter
-            example: 3b5b1707-b82c-4b1d-9078-157053902525
-        - name: smsCode
-          in: path
-          required: true
-          schema:
-            type: string
-            description: Sms code sent user provided their NIN
-            example: 090909
-      responses:
-        "200":
-          description: Get User object
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AGUserResponse'
-        "404":
-          description: Error getting user with ID
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AGUserResponse'
-  /gateway/api/v1/users/{userId}:
-    get:
-      tags:
-        - Users
-      summary: To get user By ID
-      operationId: getUserById
-      parameters:
-        - name: userId
-          in: path
-          required: true
-          schema:
-            type: string
-            description: User ID
-            example: 3b5b1707-b82c-4b1d-9078-157053902525
-      responses:
-        "200":
-          description: Get User object
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AGUserResponse'
-        "404":
-          description: Error getting user with ID
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AGUserResponse'
-  /gateway/api/v1/preonboarding:
-    description: User onboarding
-    post:
-      tags:
-        - PreOnboarding
-      summary: Add an admin user to the system
-      description: |
-        Add an user to the system using the User admin object as described in Admin User object section
-      operationId: preOnboard
-      requestBody:
-        description: User object
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/AGAddUserRequest'
-
-      responses:
-        "201":
-          description: User added successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AGUserResponse'
-
-        "404":
-          description: Error adding user
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AGUserResponse'
-  /gateway/api/v1/preonboarding/bulkUpload:
-    description: Bulk user pre-onboarding
-    post:
-      tags:
-        - PreOnboarding
-      summary: Pre-onboard many users
-      operationId: preOnboardBulk
-      requestBody:
-        description: Bulk user pre-onboard object using CSV
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/AGBulkUserUploadRequest'
-      responses:
-        "201":
-          description: Users added successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AGGenericErrorResponse'
-        "404":
-          description: Error adding users
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AGGenericErrorResponse'
-
-  /gateway/api/v1/onboarding/image/{userId}:
-    post:
-      tags:
-        - Onboarding
-      summary: To upload user image
-      operationId: uploadPhoto
-      parameters:
-        - name: userId
-          in: path
-          required: true
-          description: User ID parameter
-          schema:
-            type: string
-            description: User ID
-            example: 3b5b1707-b82c-4b1d-9078-157053902525
-      requestBody:
-        description: Image upload object
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/AGImageUploadRequest'
-      responses:
-        "200":
-          description: Image uploaded successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AGImageUploadResponse'
-        "400":
-          description: Image upload failed
-          content:
-            application/json:
-              schema:
-                type: string
-                description: Upload image message
-
-  /gateway/api/v1/authentication:
-    post:
-      tags:
-        - Authentication
-      summary: To Login User
-      description: To Login user by passing an object with username and password
-      operationId: login
-      requestBody:
-        description: This object is used to capture username and password
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/AGLoginRequest'
-      responses:
-        "200":
-          description: "User successfully authenticated"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AGGenericErrorResponse'
-        "404":
-          description: Error validating user NIN
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AGGenericErrorResponse'
+                $ref: '#/components/schemas/PGPaymentResponse'
 
 components:
   schemas:
-    AGAddBuildingRequest:
-      type: object
-      description: This object is use to capture information for creating an admin user
-      required:
-        - name
-      properties:
-        name:
-          type: string
-          description: The building label
-          example:
-            "Block5"
-        codeName:
-          type: string
-          description: This building code name
-          example:
-            "Block5"
-        description:
-          type: string
-          description: A unique description of this building
-          example:
-            "Babajide House"
-        street:
-          type: string
-          description: The street where the building is situated in the estate
-          example:
-            "5 pepper road"
-    AGCreateEstateRequest:
+    PGPaymentRequest:
       type: object
       required:
-        - name
-      description: This object is use to capture user NIN
+        - txnAmount
+        - txnType
+      description: This object is use to capture payment details
       properties:
-        name:
-          type: string
-          description: The name of the estate
+        txnAmount:
+          type: number
+          format: double
+          description: The amount of the transaction
           example:
-            "First City Gate"
-        description:
+            500.98
+        txnType:
           type: string
-          description: The estate description
+          enum: [ "CARD", "BANK_TRANSFER", "DIGITAL_WALLET" ]
+          description: The transaction type
           example:
-            "Sweet dreams of estate"
-        country:
-          type: string
-          description: Estate country
-          example:
-            "Nigeria"
-        state:
-          type: string
-          description: The estate state
-          example:
-            "Lagos"
-        city:
-          type: string
-          description: The estate city
-          example:
-            "Lagos"
-        lga:
-          type: string
-          description: The estate local govt area
-          example:
-            "Alimosho"
-        street:
-          type: string
-          description: The street of the estate is capture
-          example:
-            "49 Baale"
+            "CARD"
+        payer:
+          $ref: '#/components/schemas/PGPayerDetails'
+        payee:
+          $ref: '#/components/schemas/PGPayeeDetails'
 
-    AGAddBuildingResponse:
+    PGPaymentResponse:
       type: object
-      description: This object is used to capture information that is generated after a building is added to an estate
+      description: Captures payment response
       properties:
-        id:
+        message:
+          description: The response message
           type: string
-          description: The new ID of the just created building
           example:
-            "abcde-efghi-jkolpooi-5trsswaa"
-        estateId:
-          type: string
-          description: The estate ID of the estate the building is added to
+            "Payment failed"
+        success:
+          description: The
+          type: boolean
           example:
-            "abcde-efghi-jkolpooi-5trsswaa"
-        name:
-          type: string
-          description: The name of the just created building
-          example:
-            "Block5"
-        errorResponse:
-          $ref: '#/components/schemas/AGErrorResponse'
+            false
 
-    AGCreateEstateResponse:
-      type: object
-      description: Captures information returned after estate is created
-      properties:
-        id:
-          description: The ID of the created estate
-          type: string
-          example:
-            "adsffggii-ooiytree-kkjhgfs-ploou"
-        name:
-          description: The name of the created estate
-          type: string
-          example:
-            "First City Gate"
-        errorResponse:
-          $ref: '#/components/schemas/AGErrorResponse'
 
-    AGErrorResponse:
+    PGPayerDetails:
       type: object
       description: This object is used to capture error response
       properties:
-        success:
-          type: boolean
-          description: Indicates whether call was successful or not
-          example:
-            true
-        message:
-          type: string
-          description: The description of the response
-          example:
-            User added successfully
-        code:
-          type: string
-          description: The error code
-          example:
-            404
-        errorCode:
-          type: string
-          description: The error response code
-        status:
-          type: string
-          description: The http status code
+        card:
+          $ref: '#/components/schemas/PGCardDetails'
+        bank:
+          $ref: '#/components/schemas/PGBankDetails'
 
-    AGAddFlatRequest:
+    PGPayeeDetails:
       type: object
-      required:
-        - label
-      description: Captures response details of partner add flat request
+      description: This object is used to capture error response
       properties:
-        label:
-          type: string
-          description: Flat label
-          example: 00
+        merchant:
+          $ref: '#/components/schemas/PGMerchantDetails'
 
-    AGAddFlatResponse:
+    PGMerchantDetails:
       type: object
-      description: Captures add to flat building response
+      description: This object captures merchant details
       properties:
-        buildingId:
+        merchantCode:
           type: string
-          description: The building ID the flat is added to
-          example:
-            true
-        id:
+          description: The merchant code
+        merchantAccount:
           type: string
-          description: New added flat ID
-          example:
-            "adsffggii-ooiytree-kkjhgfs-ploou"
-        errorResponse:
-          $ref: '#/components/schemas/AGErrorResponse'
+          description: The merchant account
 
-    AGUpdateEstateRequest:
-      type: object
-      description: Create password object
-      required:
-        - password
-        - username
-        - confirmPassword
-      properties:
-        password:
-          type: string
-          description: The user password
-          minimum: 8
-          maximum: 20
-        confirmPassword:
-          type: string
-          description: The user password confirmed
-          minimum: 8
-          maximum: 20
-        username:
-          type: string
-          description: The user or admin username
-        errorResponse:
-          $ref: '#/components/schemas/AGErrorResponse'
-
-    AGListOfEstates:
-      type: object
-      description: Holds list of estates object
-      properties:
-        estates:
-          type: array
-          items:
-            $ref: '#/components/schemas/AGEstateItem'
-        errorResponse:
-          $ref: '#/components/schemas/AGErrorResponse'
-    AGEstateItem:
-      type: object
-      description: Holds list of estates object
-      properties:
-        id:
-          type: string
-          description: ID of estate
-          example: "adsffggii-ooiytree-kkjhgfs-ploou"
-        name:
-          type: string
-          description: The estate name
-          example: First City Gate
-        description:
-          type: string
-          description: The estates description
-
-
-    AGListOfBuildings:
-      type: object
-      description: Holds list of estates object
-      properties:
-        buildings:
-          type: array
-          items:
-            $ref: '#/components/schemas/AGBuildingItem'
-        errorResponse:
-          $ref: '#/components/schemas/AGErrorResponse'
-    AGBuildingItem:
-      type: object
-      description: Holds list of building objects
-      properties:
-        id:
-          type: string
-          description: ID of building
-          example: "adsffggii-ooiytree-kkjhgfs-ploou"
-        name:
-          type: string
-          description: The building name
-          example: First City Gate
-        description:
-          type: string
-          description: The building description
-
-    AGListOfFlats:
-      type: object
-      description: Holds list of estates object
-      properties:
-        flats:
-          type: array
-          items:
-            $ref: '#/components/schemas/AGFlatItem'
-        errorResponse:
-          $ref: '#/components/schemas/AGErrorResponse'
-    AGFlatItem:
-      type: object
-      description: Holds list of flat objects
-      properties:
-        id:
-          type: string
-          description: ID of flat
-          example: "adsffggii-ooiytree-kkjhgfs-ploou"
-        name:
-          type: string
-          description: The flat name
-          example: BlockB4
-
-    AGTenantAddressResponse:
-      type: object
-      description: Holds list of estates object
-      properties:
-        flat:
-          $ref: '#/components/schemas/AGFlatItem'
-        building:
-          $ref: '#/components/schemas/AGBuildingItem'
-        estate:
-          $ref: '#/components/schemas/AGEstateItem'
-        errorResponse:
-          $ref: '#/components/schemas/AGErrorResponse'
-    AGAddUserRequest:
-      type: object
-      description: This object is use to capture information for creating an admin user
-      required:
-        - phoneNumber
-        - role
-        - estateId
-      properties:
-        phoneNumber:
-          type: string
-          description: The phone number of the admin user to be added
-          example:
-            "00765432566"
-        role:
-          type: string
-          enum: [ "ADMIN", "SUPER", "TENANT" ]
-          description: This the role of the admin
-          example:
-            "ADMIN"
-        email:
-          type: string
-          description: The email of the admin user
-          example:
-            "abcdefgh@gmail.com"
-        estateId:
-          type: string
-          description: The estate ID the admin managing or user is living
-          example:
-            "abcde-efghi-jkolpooi-5trsswaa"
-        buildingId:
-          type: string
-          description: The building ID of the user
-          example:
-            "abcde-efghi-jkolpooi-5trsswaa"
-        flat:
-          type: string
-          description: The flat of the user
-          example:
-            "B5"
-    AGNinRequest:
-      type: object
-      required:
-        - idNumber
-      description: This object is use to capture user NIN
-      properties:
-        idNumber:
-          type: string
-          description: user NIN
-          example:
-            "222134567890"
-        userId:
-          type: string
-          description: User ID
-          example:
-            "edf-jhhgt90-lkjhs-89009"
-
-    AGUserResponse:
-      type: object
-      description: This object is used to capture information that is generated after an admin user is created
-      properties:
-        id:
-          type: string
-          description: The new ID of the just created user
-          example:
-            "abcde-efghi-jkolpooi-5trsswaa"
-        role:
-          type: string
-          description: The role of the user
-          example:
-            "ADMIN"
-        image:
-          type: string
-          format: base64
-          description: User base64 string image
-        errorResponse:
-          $ref: '#/components/schemas/AGErrorResponse'
-
-    AGNinResponse:
-      type: object
-      description: Captures all the information returned after NIN validation
-      properties:
-        firstName:
-          description: The first name of the user
-          type: string
-          example:
-            David
-        lastName:
-          description: The last name of the user
-          type: string
-          example:
-            Jide
-        phoneNumber:
-          description: The phone number of the user
-          type: string
-          example:
-            08087654333
-        userId:
-          description: The user ID
-          type: string
-          example:
-            89900l-kkmhgf-olkkhh-oiuytr
-        validated:
-          type: boolean
-          description: Indicates that the user is either validated or not
-          example:
-            true
-        errorResponse:
-          $ref: '#/components/schemas/AGErrorResponse'
-
-    AGNinPartnerResponse:
-      type: object
-      description: Captures response details of partner NIN verification
-      properties:
-        status:
-          type: string
-          description: External NIN response code
-          example:
-            00
-        message:
-          type: string
-          description: The response message
-          example:
-            Successful
-        data:
-          $ref: '#/components/schemas/AGNinResponseData'
-
-    AGNinResponseData:
-      type: object
-      description: Holds all user NIN information
-      properties:
-        valid:
-          type: boolean
-          description: Indicates that NIN is valid
-          example:
-            true
-        idNumber:
-          type: string
-          description: User NIN
-          example:
-            45629461922
-        gender:
-          type: string
-          description: User gender
-          example:
-            m
-        phoneNumber:
-          type: string
-          description: User phone number
-          example:
-            08132741111
-        fullName:
-          type: string
-          description: User fullName
-          example:
-            Jude
-        firstName:
-          type: string
-          description: User first name
-          example:
-            Jude
-        lastName:
-          type: string
-          description: User last name
-          example:
-            Thomas
-        middleName:
-          type: string
-          description: User middle name
-          example:
-            Paul
-        dateOfBirth:
-          type: string
-          description: User date of birth
-          example:
-            1997-10-20
-        photo:
-          type: string
-          description: User photo image
-
-    AGAddPasswordRequest:
-      type: object
-      description: Create password object
-      required:
-        - password
-        - username
-        - confirmPassword
-      properties:
-        password:
-          type: string
-          description: The user password
-          minimum: 8
-          maximum: 20
-        confirmPassword:
-          type: string
-          description: The user password confirmed
-          minimum: 8
-          maximum: 20
-        username:
-          type: string
-          description: The user or admin username
-
-    AGImageUploadRequest:
-      type: object
-      description: Upload base64 image string
-      required:
-        - image
-      properties:
-        image:
-          type: string
-          format: base64
-          description: Captures image as a base64 string
-
-    AGImageUploadResponse:
-      type: object
-      description: Image upload response object
-      properties:
-        userId:
-          type: string
-          description: The user ID
-        image:
-          type: string
-          format: base64
-          description: Captures image as a base64 string
-        errorResponse:
-          $ref: '#/components/schemas/AGErrorResponse'
-    AGGenericErrorResponse:
-      type: object
-      description: Generic error response object
-      properties:
-        errorResponse:
-          $ref: '#/components/schemas/AGErrorResponse'
-
-    AGBulkUserUploadRequest:
+    PGBankDetails:
       type: object
       description: Captures bulk upload of users
-      required:
-        - estateId
-        - buildingId
-        - file
       properties:
-        estateId:
+        accountNumber:
           type: string
-          description: The estate ID the admin managing or user is living
-          example:
-            "abcde-efghi-jkolpooi-5trsswaa"
-        buildingId:
-          type: string
-          description: The building ID of the user
-          example:
-            "abcde-efghi-jkolpooi-5trsswaa"
-        role:
-          type: string
-          enum: [ "ADMIN", "SUPER", "RESIDENT" ]
-          description: This the role of the admin
-          example:
-            "ADMIN"
-        file:
-          description: This is a csv file in this format - phoneNumber, email, flat
-          type: string
-          format: byte
+          description: The payer account number
 
-    AGLoginRequest:
+    PGCardDetails:
       type: object
       description: This object is used to capture error response
-      required:
-        - username
-        - password
       properties:
-        username:
+        cardNumber:
           type: string
-          description: A username can be registered phone number, email or a username
+          description: The card number
           example:
-            dummy@propertly.ng
-        password:
+            5678909087654
+        cardName:
           type: string
-          description: The user password
+          description: The card name
           example:
-            Passw0rd065
+            Kingsley Amaeze
+        expiryDate:
+          type: string
+          description: The card expiry date
+          example:
+            09/24
+        cvv:
+          type: string
+          description: The card value verification
+          example:
+            094
 
 
 
